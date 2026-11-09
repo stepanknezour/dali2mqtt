@@ -37,6 +37,9 @@ jobs:
         shell: bash
         run: |
           source ~/esp-idf/export.sh
+          
+          echo "CONFIG_MDNS_ENABLE_CONSOLE_CLI=n" >> support/esp32s3/Release/sdkconfig.default
+          
           cmake -S . -B build -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32s3.cmake \
             -DCMAKE_BUILD_TYPE=Release
