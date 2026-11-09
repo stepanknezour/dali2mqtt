@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           source ~/esp-idf/export.sh
+          echo '# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set' >> support/esp32s3/Release/sdkconfig.default
 
           sed -i 's/^CONFIG_MDNS_ENABLE_CONSOLE_CLI=.*/# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set/' support/esp32s3/Release/sdkconfig.default
           
