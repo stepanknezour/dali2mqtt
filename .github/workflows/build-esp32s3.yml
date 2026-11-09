@@ -39,8 +39,7 @@ jobs:
           source ~/esp-idf/export.sh
 
           sed -i 's/^CONFIG_MDNS_ENABLE_CONSOLE_CLI=.*/# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set/' support/esp32s3/Release/sdkconfig.default
-          sed -i 's/^CONFIG_MDNS_ENABLE_CONSOLE_CLI=.*/# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set/' support/esp32s3/Release/sdkconfig
-
+          
           cmake -S . -B build -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32s3.cmake \
             -DCMAKE_BUILD_TYPE=Release
