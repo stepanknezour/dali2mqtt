@@ -17,7 +17,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y git cmake ninja-build python3 python3-pip python3-venv
@@ -37,12 +37,14 @@ jobs:
         shell: bash
         run: |
           source ~/esp-idf/export.sh
-          
-          echo "CONFIG_MDNS_ENABLE_CONSOLE_CLI=n" >> support/esp32s3/Release/sdkconfig.default
-          
+
+          sed -i 's/^CONFIG_MDNS_ENABLE_CONSOLE_CLI=.*/# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set/' support/esp32s3/Release/sdkconfig.default
+          sed -i 's/^CONFIG_MDNS_ENABLE_CONSOLE_CLI=.*/# CONFIG_MDNS_ENABLE_CONSOLE_CLI is not set/' support/esp32s3/Release/sdkconfig
+
           cmake -S . -B build -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32s3.cmake \
             -DCMAKE_BUILD_TYPE=Release
+
           cmake --build build --parallel 2
 
       - name: Upload firmware
