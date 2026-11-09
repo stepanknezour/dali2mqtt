@@ -1,0 +1,53 @@
+
+name: Build DALI MQTT ESP32-S3
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git cmake ninja-build python3 python3-pip python3-venv
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ESP-IDF
+        run: |
+          git clone --recursive --branch v5.4.2 https://github.com/espressif/esp-idf.git ~/esp-idf
+          cd ~/esp-idf
+          ./install.sh esp32s3
+
+      - name: Build firmware
+        shell: bash
+        run: |
+          source ~/esp-idf/export.sh
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32s3.cmake \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel 2
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: dali2mqtt-ESP32-S3
+          path: |
+            build/**/*.bin
+            build/*.bin
+          if-no-files-found: error
+          retention-days: 14
